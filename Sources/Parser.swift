@@ -49,6 +49,25 @@ struct Parser {
 				result = String(response[response.startIndex.advancedBy(idx)..<response.endIndex])
 			}
 
+		case "*":
+			// Arrays
+			var values = response.characters.split("\r\n").map(String.init)
+			var tmp: [String?] = []
+
+			// first value is the array size
+			values.removeAtIndex(0)
+
+			for value in values {
+				if value[value.startIndex] != "$" {
+					tmp.append(value)
+				} else if value == "$-1" {
+					// check if it's $-1 and append a nil value
+					tmp.append(nil)
+				}
+			}
+
+			result = tmp
+
 		default:
 			result = ""
 		}
