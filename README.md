@@ -35,11 +35,21 @@ let package = Package(
 let redis = try Redis("172.28.128.3", 6379)
 try redis.command(.SET("foo", "bar"))
 ```
-All commands and its parameters are defined in `CommandTypeEnum` enum. The `command` function returns the same response from Redis.
+All commands and its parameters are defined in `CommandTypeEnum` enum, with parameters in the same order as Redis docs. The `command` function returns the same response from Redis.
+
+Commands with milliseconds (`SETEX/PSETEX`, `EXPIRE/PEXPIRE`, etc) has a `Bool` parameter to send or return in milliseconds. 
+It's always the last parameter.
+
+At this time, there is some commands exceptions:
+* `SORT` - To be implemented
+* `MIGRATE`, `WAIT`, `SCAN` - These are commands to manage the server. A discussion could be opened to implement it or don't.
 
 ## Contributing
 
-Pull requests are welcome.
+Pull requests are welcome, there is a lot to do:
+- [ ] Wrap hiredis
+- [ ] Check the `TODO` around the code
+- [ ] Implement all commands
 
 Now, all commands are being sent through `TCP`. The plan is use `hiredis` as default but choose `TCP` when it's not available.
 
