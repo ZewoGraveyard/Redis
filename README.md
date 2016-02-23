@@ -47,8 +47,10 @@ At this time, there is some commands exceptions:
 
 ## Contributing
 
-Pull requests are welcome, there is a lot to do:
+Pull requests are welcome, there is a lot to do (not in a specific order):
 - [ ] Pub/Sub
+- [ ] Scripts
+- [ ] Pipeline
 - [ ] Wrap hiredis
 - [ ] Check the `TODO` around the code
 - [ ] Implement all commands
