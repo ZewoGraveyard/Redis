@@ -54,8 +54,6 @@ public enum CommandTypeEnum {
 
 	// For everything else
 	case RAW(String)
-		
-	}
 
 }
 
@@ -162,43 +160,43 @@ extension Commands {
 		case .DEL(let keys):
 			result = try send_command("DEL \(keys.joinWithSeparator(" "))\r\n")
 
-		case DUMP(let key):
+		case .DUMP(let key):
 			result = try send_command("DUMP \(key)\r\n")
 
-		case EXISTS(let keys):
+		case .EXISTS(let keys):
 			result = try send_command("EXISTS \(keys.joinWithSeparator(" "))\r\n")
 
-		case EXPIRE(let key, let seconds, let p):
+		case .EXPIRE(let key, let seconds, let p):
 			result = try send_command(p ? "P" : "" + "EXPIRE \(key) \(seconds)\r\n")
 
-		case EXPIREAT(let key, let timestamp, let p):
+		case .EXPIREAT(let key, let timestamp, let p):
 			result = try send_command(p ? "P" : "" + "EXPIREAT \(key) \(timestamp)\r\n")
 
-		case KEYS(let pattern):
+		case .KEYS(let pattern):
 			result = try send_command("KEYS \(pattern)\r\n")
 
-		case MOVE(let key, let db):
+		case .MOVE(let key, let db):
 			result = try send_command("MOVE \(key) \(db)\r\n")
 
-		case PERSIST(let key):
+		case .PERSIST(let key):
 			result = try send_command("PERSIST \(key)\r\n")
 
-		case TTL(let key, Bool):
-			result = try send_command("TTL \(key)\r\n")
+		case .TTL(let key, let p):
+			result = try send_command(p ? "P" : "" + "TTL \(key)\r\n")
 
-		case RANDOMKEY:
+		case .RANDOMKEY:
 			result = try send_command("RANDOMKEY\r\n")
 
-		case RENAME(let key, let newkey):
+		case .RENAME(let key, let newkey):
 			result = try send_command("RENAME \(key) \(newkey)\r\n")
 
-		case RENAMENX(let key, let newkey):
+		case .RENAMENX(let key, let newkey):
 			result = try send_command("RENAMENX \(key) \(newkey)\r\n")
 
-		case RESTORE(let key, let ttl, let serialized, let replace):
+		case .RESTORE(let key, let ttl, let serialized, let replace):
 			result = try send_command("RESTORE \(key) \(ttl) \"\(serialized)\"" + (replace ? " REPLACE" : "") + "\r\n")
 
-		case TYPE(let key):
+		case .TYPE(let key):
 			result = try send_command("TYPE \(key)\r\n")
 
 		// Connection
