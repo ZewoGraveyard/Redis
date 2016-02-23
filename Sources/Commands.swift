@@ -5,7 +5,7 @@ public enum CommandError: ErrorType {
 }
 
 public enum CommandTypeEnum { 
-	case AUTH 
+	// String
 	case SET(String, String)
 	case APPEND(String, String)
 	case BITCOUNT(String, Int, Int)
@@ -28,6 +28,30 @@ public enum CommandTypeEnum {
 	case SETNX(String, String)
 	case SETRANGE(String, Int, String)
 	case STRLEN(String)
+
+	// Keys
+	case DEL(Array<String>)
+	case DUMP(String)
+	case EXISTS(Array<String>)
+	case EXPIRE(String, Int, Bool) // use the same command for EXPIRE and PEXPIRE, but use true in the last parameter for PEXPIRE
+	case EXPIREAT(String, Double, Bool) // use the same command for EXPIREAT and PEXPIREAT, but use true in the last parameter for PEXPIREAT
+	case KEYS(String)
+	case MOVE(String, Int)
+	case PERSIST(String)
+	case TTL(String, Bool)
+	case RANDOMKEY
+	case RENAME(String, String)
+	case RENAMENX(String, String)
+	case RESTORE(String, Int, String, Bool) // Bool is for REPLACE modifier
+	case SORT(String, String) // TODO: implement this madness
+	case TYPE(String)
+
+
+	// Connection
+	case AUTH(String)
+	case ECHO(String)
+	case PING
+	case SELECT(Int)
 
 }
 
@@ -129,6 +153,62 @@ extension Commands {
 
 		case .STRLEN(let key):
 			result = try send_command("STRLEN \(key)\r\n")
+
+		// Keys
+		case .DEL(let keys):
+			result = try send_command("DEL \(keys.joinWithSeparator(" "))\r\n")
+
+		case DUMP(let key):
+			result = try send_command("DUMP \(key)\r\n")
+
+		case EXISTS(let keys):
+			result = try send_command("EXISTS \(keys.joinWithSeparator(" "))\r\n")
+
+		case EXPIRE(let key, let seconds, let p):
+			result = try send_command(p ? "P" : "" + "EXPIRE \(key) \(seconds)\r\n")
+
+		case EXPIREAT(let key, let timestamp, let p):
+			result = try send_command(p ? "P" : "" + "EXPIREAT \(key) \(timestamp)\r\n")
+
+		case KEYS(let pattern):
+			result = try send_command("KEYS \(pattern)\r\n")
+
+		case MOVE(let key, let db):
+			result = try send_command("MOVE \(key) \(db)\r\n")
+
+		case PERSIST(let key):
+			result = try send_command("PERSIST \(key)\r\n")
+
+		case TTL(let key, Bool):
+			result = try send_command("TTL \(key)\r\n")
+
+		case RANDOMKEY:
+			result = try send_command("RANDOMKEY\r\n")
+
+		case RENAME(let key, let newkey):
+			result = try send_command("RENAME \(key) \(newkey)\r\n")
+
+		case RENAMENX(let key, let newkey):
+			result = try send_command("RENAMENX \(key) \(newkey)\r\n")
+
+		case RESTORE(let key, let ttl, let serialized, let replace):
+			result = try send_command("RESTORE \(key) \(ttl) \"\(serialized)\"" + (replace ? " REPLACE" : "") + "\r\n")
+
+		case TYPE(let key):
+			result = try send_command("TYPE \(key)\r\n")
+
+		// Connection
+		case .AUTH(let password):
+			result = try send_command("AUTH \(password)\r\n")
+		
+		case .ECHO(let message):
+			result = try send_command("ECHO \"\(message)\"\r\n")
+
+		case .PING:
+			result = try send_command("PING\"\r\n")
+		
+		case .SELECT(let index):
+			result = try send_command("SELECT \(index)\r\n")
 		
 		default:
 			result = nil
