@@ -46,6 +46,26 @@ public enum CommandTypeEnum {
 	case SORT(String, String) // TODO: implement this madness
 	case TYPE(String)
 
+	// Lists
+	case BLPOP(Array<String>, Int)
+	case BRPOP(Array<String>, Int)
+	case BRPOPLPUSH(String, String, Int)
+	case LINDEX(String, Int)
+	case LINSERT(String, String, String, String)
+	case LLEN(String)
+	case LPOP(String)
+	case LPUSH(String, Array<String>)
+	case LPUSHX(String, String)
+	case LRANGE(String, Int, Int)
+	case LREM(String, Int, String)
+	case LSET(String, Int, String)
+	case LTRIM(String, Int, Int)
+	case RPOP(String)
+	case RPOPLPUSH(String, String)
+	case RPUSH(String, Array<String>)
+	case LPUSHX(String, String)
+	
+
 	// Connection
 	case AUTH(String)
 	case ECHO(String)
@@ -211,6 +231,60 @@ extension Commands {
 		
 		case .SELECT(let index):
 			result = try send_command("SELECT \(index)\r\n")
+
+		case .BLPOP(let keys, let timeout):
+			result = try send_command("BLPOP \(keys.joinWithSeparator(" ")) \(timeout))\r\n")
+
+		case .BRPOP(let keys, let timeout):
+			result = try send_command("\(keys.joinWithSeparator(" ")) \(timeout)\r\n")
+
+		case .BRPOPLPUSH(let source, let destination, let timeout):
+			result = try send_command("BRPOPLPUSH \(source) \"\(destination)\" \(timeout)\r\n")
+
+		case .LINDEX(let key, let index):
+			result = try send_command("LINDEX \(key) \(index)\r\n")
+
+		case .LINSERT(let key, let order, let pivot, let value):
+			result = try send_command("LINSERT \(key) \(order) \(pivot) \(value)\r\n")
+
+		case .LLEN(let key):
+			result = try send_command("LLEN \(key)\r\n")
+
+		case .LPOP(let key):
+			result = try send_command("LPOP \(key)\r\n")
+
+		case .LPUSH(let key, let values):
+			let newValues = values.flatMap { String("\"\($0)\"") }
+			result = try send_command("LPUSH \(key) \(newValues.joinWithSeparator(" "))\r\n")
+
+		case .LPUSHX(let key, let value):
+			result = try send_command("LPUSHX \(key) \"\(value)\"\r\n")
+
+		case .LRANGE(let key, let start, let stop):
+			result = try send_command("LRANGE \(key) \(start) \(stop)\r\n")
+
+		case .LREM(let key, let count, let value):
+			result = try send_command("LREM \(key) \(count) \"\(value)\"\r\n")
+
+		case .LSET(let key, let index, let value):
+			result = try send_command("LSET \(key) \(index) \"\(value)\"\r\n")
+
+		case .LTRIM(let key, let start, let stop):
+			result = try send_command("LTRIM \(key) \(start) \(stop)\r\n")
+
+		case .RPOP(let key):
+			result = try send_command("RPOP \(key)\r\n")
+
+		case .RPOPLPUSH(let source, let destination):
+			result = try send_command("RPOPLPUSH \(source) \(destination)\r\n")
+
+		case .RPUSH(let key, let values):
+			let newValues = values.flatMap { String("\"\($0)\"") }
+			result = try send_command("RPUSH \(key) \(newValues.joinWithSeparator(" "))\r\n")
+
+		case .RPUSHX(let key, let value):
+			result = try send_command("RPUSHX \(key) \"\(value)\"\r\n")
+
 
 		case .RAW(let raw):
 			result = try send_command("\(raw)\r\n")
