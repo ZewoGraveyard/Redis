@@ -47,6 +47,7 @@ At this time, there is some commands exceptions:
 ## Contributing
 
 Pull requests are welcome, there is a lot to do:
+- [ ] Pub/Sub
 - [ ] Wrap hiredis
 - [ ] Check the `TODO` around the code
 - [ ] Implement all commands
