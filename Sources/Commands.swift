@@ -4,6 +4,13 @@ public enum CommandError: ErrorType {
 	
 }
 
+extension Array {
+	public func quoteItems() -> Array<String> {
+		let result: [String] = self.flatMap({ String("\"\($0)\"") })
+		return result
+	}
+}
+
 public enum CommandTypeEnum { 
 	// String
 	case SET(String, String)
@@ -63,7 +70,23 @@ public enum CommandTypeEnum {
 	case RPOP(String)
 	case RPOPLPUSH(String, String)
 	case RPUSH(String, Array<String>)
-	case LPUSHX(String, String)
+	case RPUSHX(String, String)
+
+	// Sets
+	case SADD(String, Array<String>)
+	case SCARD(String)
+	case SDIFF(Array<String>)
+	case SDIFFSTORE(String, Array<String>)
+	case SINTER(Array<String>)
+	case SINTERSTORE(String, Array<String>)
+	case SISMEMBER(String, String)
+	case SMEMBERS(String)
+	case SMOVE(String, String, String)
+	case SPOP(String)
+	case SRANDMEMBER(String, Int?)
+	case SREM(String, Array<String>)
+	case SUNION(Array<String>)
+	case SUNIONSTORE(String, Array<String>)
 	
 
 	// Connection
@@ -110,7 +133,7 @@ extension Commands {
 			result = try send_command("BITOP \(operation) \(destkey) \(srckeys.joinWithSeparator(" "))\r\n")
 
 		case .BITPOS(let key, let bit, let start_end):
-			let stringArray = start_end.flatMap { String($0) }
+			let stringArray = start_end.quoteItems()
 			result = try send_command("BITPOS \(key) \(bit) \(stringArray.joinWithSeparator(" "))\r\n")
 
 		case .INCR(let key):
@@ -254,7 +277,7 @@ extension Commands {
 			result = try send_command("LPOP \(key)\r\n")
 
 		case .LPUSH(let key, let values):
-			let newValues = values.flatMap { String("\"\($0)\"") }
+			let newValues = values.quoteItems()
 			result = try send_command("LPUSH \(key) \(newValues.joinWithSeparator(" "))\r\n")
 
 		case .LPUSHX(let key, let value):
@@ -279,11 +302,56 @@ extension Commands {
 			result = try send_command("RPOPLPUSH \(source) \(destination)\r\n")
 
 		case .RPUSH(let key, let values):
-			let newValues = values.flatMap { String("\"\($0)\"") }
+			let newValues = values.quoteItems()
 			result = try send_command("RPUSH \(key) \(newValues.joinWithSeparator(" "))\r\n")
 
 		case .RPUSHX(let key, let value):
 			result = try send_command("RPUSHX \(key) \"\(value)\"\r\n")
+
+		// Sets commands
+		case .SADD(let key, let members):
+			let newValues = members.quoteItems()
+			result = try send_command("SADD \(key) \(newValues.joinWithSeparator(" "))\r\n")
+
+		case .SCARD(let key):
+			result = try send_command("SCARD \(key)\r\n")
+
+		case .SDIFF(let keys):
+			result = try send_command("SDIFF \(keys.joinWithSeparator(" "))\r\n")
+
+		case .SDIFFSTORE(let destination, let keys):
+			result = try send_command("SDIFFSTORE \(destination) \(keys.joinWithSeparator(" "))\r\n")
+
+		case .SINTER(let keys):
+			result = try send_command("SINTER \(keys.joinWithSeparator(" "))\r\n")
+
+		case .SINTERSTORE(let destination, let keys):
+			result = try send_command("SINTERSTORE \(destination) \(keys.joinWithSeparator(" "))\r\n")
+
+		case .SISMEMBER(let key, let member):
+			result = try send_command("SISMEMBER \(key) \"\(member)\"\r\n")
+
+		case .SMEMBERS(let key):
+			result = try send_command("SMEMBERS \(key)\r\n")
+
+		case .SMOVE(let source, let destination, let member):
+			result = try send_command("SMOVE \(source) \(destination) \"\(member)\"\r\n")
+
+		case .SPOP(let key):
+			result = try send_command("SPOP \(key)\r\n")
+
+		case .SRANDMEMBER(let key, let count):
+			result = try send_command("SRANDMEMBER \(key) \(count != nil ? String(count) : "")\r\n")
+
+		case .SREM(let key, let members):
+			let newMembers = start_end.quoteItems()
+			result = try send_command("SREM \(key) \(newMembers.joinWithSeparator(" "))\r\n")
+
+		case .SUNION(let keys):
+			result = try send_command("SUNION \(keys.joinWithSeparator(" "))\r\n")
+
+		case .SUNIONSTORE(let destination, let keys):
+			result = try send_command("SUNIONSTORE \(destination) \(keys.joinWithSeparator(" "))\r\n")
 
 
 		case .RAW(let raw):
