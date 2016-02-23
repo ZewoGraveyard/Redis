@@ -43,6 +43,7 @@ It's always the last parameter.
 At this time, there is some commands exceptions:
 * `SORT` - To be implemented
 * `MIGRATE`, `WAIT`, `SCAN` - These are commands to manage the server. A discussion could be opened to implement it or don't.
+* `Server` commands - Same as above
 
 ## Contributing
 
