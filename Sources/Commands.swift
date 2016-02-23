@@ -46,12 +46,16 @@ public enum CommandTypeEnum {
 	case SORT(String, String) // TODO: implement this madness
 	case TYPE(String)
 
-
 	// Connection
 	case AUTH(String)
 	case ECHO(String)
 	case PING
 	case SELECT(Int)
+
+	// For everything else
+	case RAW(String)
+		
+	}
 
 }
 
@@ -209,7 +213,10 @@ extension Commands {
 		
 		case .SELECT(let index):
 			result = try send_command("SELECT \(index)\r\n")
-		
+
+		case .RAW(let raw):
+			result = try send_command("\(raw)\r\n")
+
 		default:
 			result = nil
 		}
