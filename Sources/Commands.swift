@@ -1,7 +1,7 @@
 import TCP
 
 public enum CommandError: ErrorType {
-	case WrongNumberOfArguments(numberNeeded: Int)
+	
 }
 
 public enum CommandTypeEnum { 
