@@ -344,7 +344,7 @@ extension Commands {
 			result = try send_command("SRANDMEMBER \(key) \(count != nil ? String(count) : "")\r\n")
 
 		case .SREM(let key, let members):
-			let newMembers = start_end.quoteItems()
+			let newMembers = members.quoteItems()
 			result = try send_command("SREM \(key) \(newMembers.joinWithSeparator(" "))\r\n")
 
 		case .SUNION(let keys):
