@@ -45,12 +45,32 @@ At this time, there is some commands exceptions:
 * `MIGRATE`, `WAIT`, `SCAN` - These are commands to manage the server. A discussion could be opened to implement it or don't.
 * `Server` commands - Same as above
 
+### Pipeline
+
+Pipeline works by issuing commands inside a closure:
+
+```swift
+try redis.pipeline {
+	try redis.command(.SET("foobar", "foo bar"))
+	try redis.command(.SET("foo", "bar"))
+}
+```
+
+If you need to `WATCH` a key, use the first argument. In case of an error, it'll be returned as `nil`.
+
+```swift
+try redis.pipeline(["foo"]) {
+	try redis.command(.SET("foobar", "foo bar"))
+	try redis.command(.SET("foo", "bar"))
+}
+```
+
 ## Contributing
 
 Pull requests are welcome, there is a lot to do (not in a specific order):
 - [ ] Pub/Sub
 - [ ] Scripts
-- [ ] Pipeline
+- [ ] Pipeline with `DISCARD`
 - [ ] Wrap hiredis
 - [ ] Check the `TODO` around the code
 - [ ] Implement all commands

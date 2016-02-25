@@ -363,6 +363,19 @@ extension Commands {
 
 		return result
 	}
+
+	public func pipeline(watch: [String] = [], pipe: () throws -> Void) throws -> Any? {
+
+		if watch.count > 0 {
+			try send_command("WATCH \(watch.joinWithSeparator(" "))\r\n")
+		}
+
+		try send_command("MULTI\r\n")
+		try pipe()
+		let result = try send_command("EXEC\r\n")
+
+		return result
+	}
 	
 }
 
