@@ -54,19 +54,24 @@ struct Parser {
 			var values = response.characters.split("\r\n").map(String.init)
 			var tmp: [String?] = []
 
-			// first value is the array size
-			values.removeAtIndex(0)
+			// check if Redis returned a null array
+			if values[0] == "-1" {
+				result = nil
+			} else {
+				// first value is the array size
+				values.removeAtIndex(0)
 
-			for value in values {
-				if value[value.startIndex] != "$" {
-					tmp.append(value)
-				} else if value == "$-1" {
-					// check if it's $-1 and append a nil value
-					tmp.append(nil)
+				for value in values {
+					if value[value.startIndex] != "$" {
+						tmp.append(value)
+					} else if value == "$-1" {
+						// check if it's $-1 and append a nil value
+						tmp.append(nil)
+					}
 				}
-			}
 
-			result = tmp
+				result = tmp
+			}
 
 		default:
 			result = ""
