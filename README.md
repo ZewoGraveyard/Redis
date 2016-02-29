@@ -77,6 +77,9 @@ Pull requests are welcome, there is a lot to do (not in a specific order):
 
 Now, all commands are being sent through `TCP`. The plan is use `hiredis` as default but choose `TCP` when it's not available.
 
+## Author
+
+Ricardo Borelli - [@rabc](http://twitter.com/rabc)
 
 
 
