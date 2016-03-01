@@ -75,7 +75,6 @@ struct Parser {
 						}
 
 						values.removeAtIndex(0)
-						print("new values = \(values)")
 					}
 
 					parsed.append(tmp)
