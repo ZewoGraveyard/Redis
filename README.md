@@ -32,7 +32,7 @@ let package = Package(
 ## Using
 
 ```swift
-let redis = try Redis("172.28.128.3", 6379)
+let redis = try Redis("127.0.0.1", 6379)
 try redis.command(.SET("foo", "bar"))
 ```
 All commands and its parameters are defined in `CommandTypeEnum` enum, with parameters in the same order as Redis docs. The `command` function returns the same response from Redis.
@@ -65,10 +65,30 @@ try redis.pipeline(["foo"]) {
 }
 ```
 
+### PubSub
+
+__WARNING:__ This is a first draft and the syntax is open to discussion. Beware of changes.
+
+PubSub can subscribe to multiple channels at once, but you've to unsubscribe of one at time.
+
+```swift
+let redis = try Redis("127.0.0.1", 6379)
+
+let pubsub = PubSub(conn: redis)
+try pubsub.subscribe(["foo-channel", "bar-channel"]) { message in 
+	if message["data"] as? String == "stop" {
+		print("Stahp \(message["channel"])!")
+		pubsub.unsubscribe(message["channel"] as! String)
+	} else {
+		print("Keep walking \(message["channel"])...")
+	}
+}
+```
+
 ## Contributing
 
 Pull requests are welcome, there is a lot to do (not in a specific order):
-- [ ] Pub/Sub
+- [x] Pub/Sub
 - [ ] Scripts
 - [ ] Pipeline with `DISCARD`
 - [ ] Wrap hiredis
