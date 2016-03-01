@@ -52,25 +52,36 @@ struct Parser {
 		case "*":
 			// Arrays
 			var values = response.characters.split("\r\n").map(String.init)
-			var tmp: [String?] = []
-
+			var parsed: [Any?] = []
+			
 			// check if Redis returned a null array
 			if values[0] == "-1" {
 				result = nil
 			} else {
-				// first value is the array size
-				values.removeAtIndex(0)
+				values[0] = "*\(values[0])"
 
-				for value in values {
-					if value[value.startIndex] != "$" {
-						tmp.append(value)
-					} else if value == "$-1" {
-						// check if it's $-1 and append a nil value
-						tmp.append(nil)
+				while values.count > 0 {
+					var tmp: [Any?] = []
+					let tail: Int = Int(String(values[0][values[0].startIndex.advancedBy(1)]))!
+
+					values.removeAtIndex(0)
+					while tmp.count < tail {
+
+						if values[0][values[0].startIndex] != "$" {
+							tmp.append(try Parser.read_response("\(values[0])\r\n"))
+						} else {
+							values.removeAtIndex(0)
+							tmp.append(values[0])
+						}
+
+						values.removeAtIndex(0)
+						print("new values = \(values)")
 					}
+
+					parsed.append(tmp)
 				}
 
-				result = tmp
+				result = parsed
 			}
 
 		default:
