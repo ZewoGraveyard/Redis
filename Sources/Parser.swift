@@ -80,7 +80,12 @@ struct Parser {
 					parsed.append(tmp)
 				}
 
-				result = parsed
+				if parsed.count == 1 {
+					// return as simple array
+					result = parsed[0]
+				} else {
+					result = parsed
+				}
 			}
 
 		default:
