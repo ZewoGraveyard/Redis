@@ -87,7 +87,22 @@ public enum CommandTypeEnum {
 	case SREM(String, Array<String>)
 	case SUNION(Array<String>)
 	case SUNIONSTORE(String, Array<String>)
-	
+
+	// Hashes
+	case HSET(String, String, String)
+	case HSETNX(String, String, String)
+	case HDEL(String, Array<String>)
+	case HEXISTS(String, String)
+	case HGET(String, String)
+	case HGETALL(String)
+	case HINCRBY(String, String, Int)
+	case HINCRBYFLOAT(String, String, Float)
+	case HKEYS(String)
+	case HLEN(String)
+	case HMGET(String, Array<String>)
+	case HMSET(String, Dictionary<String, String>)
+	case HSTRLEN(String, String)
+	case HVALS(String)
 
 	// Connection
 	case AUTH(String)
@@ -352,6 +367,58 @@ extension Commands {
 
 		case .SUNIONSTORE(let destination, let keys):
 			result = try send_command("SUNIONSTORE \(destination) \(keys.joinWithSeparator(" "))\r\n")
+
+		// Hashes
+		case HSET(let key, let field, let value):
+			result = try send_command("HSET \(key) \(field) \"\(value)\"\r\n")
+
+		case HSETNX(let key, let field, let value):
+			result = try send_command("HSETNX \(key) \(field) \"\(value)\"\r\n")
+
+		case HDEL(let key, let fields):
+			result = try send_command("HDEL \(key) \(fields.joinWithSeparator(" "))\r\n")
+
+		case HEXISTS(let key, let field):
+			result = try send_command("HEXISTS \(key) \(field)\r\n")
+
+		case HGET(let key, let field):
+			result = try send_command("HGET \(key) \(field)\r\n")
+
+		case HGETALL(let key):
+			result = try send_command("HGETALL \(key)\r\n")
+
+		case HINCRBY(let key, let field, let increment):
+			result = try send_command("HINCRBY \(key) \(field) \(increment)\r\n")
+
+		case HINCRBYFLOAT(let key, let field, let increment):
+			result = try send_command("HINCRBYFLOAT \(key) \(field) \(increment)\r\n")
+
+		case HKEYS(let key):
+			result = try send_command("HKEYS \(key)\r\n")
+
+		case HLEN(let key):
+			result = try send_command("HLEN \(key)\r\n")
+
+		case HMGET(let key, let fields):
+			result = try send_command("HMGET \(key) \(fields.joinWithSeparator(" "))\r\n")
+
+		case HMSET(let key, let values):
+			let strValues = values.reduce(String()) { str, pair in
+				var tmp = ""
+				if str != "" {
+					tmp = "\(str) "
+				}
+				tmp += "\(pair.0) \"\(pair.1)\""
+				return tmp
+			}
+
+			result = try send_command("HMSET \(key) \(strValues)\r\n")
+
+		case HSTRLEN(let key, let field):
+			result = try send_command("HSTRLEN \(key) \(field)\r\n")
+
+		case HVALS(let key):
+			result = try send_command("HVALS \(key)\r\n")
 
 
 		case .RAW(let raw):
