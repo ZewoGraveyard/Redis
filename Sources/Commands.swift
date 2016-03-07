@@ -88,6 +88,12 @@ public enum CommandTypeEnum {
 	case SUNION(Array<String>)
 	case SUNIONSTORE(String, Array<String>)
 
+	// Sorted Sets
+	case ZADD(String, Dictionary<String, String>)
+	case ZCARD(String)
+	case ZCOUNT(String, String, String)
+	case ZINCRBY(String, Float, String)
+
 	// Hashes
 	case HSET(String, String, String)
 	case HSETNX(String, String, String)
@@ -369,40 +375,40 @@ extension Commands {
 			result = try send_command("SUNIONSTORE \(destination) \(keys.joinWithSeparator(" "))\r\n")
 
 		// Hashes
-		case HSET(let key, let field, let value):
+		case .HSET(let key, let field, let value):
 			result = try send_command("HSET \(key) \(field) \"\(value)\"\r\n")
 
-		case HSETNX(let key, let field, let value):
+		case .HSETNX(let key, let field, let value):
 			result = try send_command("HSETNX \(key) \(field) \"\(value)\"\r\n")
 
-		case HDEL(let key, let fields):
+		case .HDEL(let key, let fields):
 			result = try send_command("HDEL \(key) \(fields.joinWithSeparator(" "))\r\n")
 
-		case HEXISTS(let key, let field):
+		case .HEXISTS(let key, let field):
 			result = try send_command("HEXISTS \(key) \(field)\r\n")
 
-		case HGET(let key, let field):
+		case .HGET(let key, let field):
 			result = try send_command("HGET \(key) \(field)\r\n")
 
-		case HGETALL(let key):
+		case .HGETALL(let key):
 			result = try send_command("HGETALL \(key)\r\n")
 
-		case HINCRBY(let key, let field, let increment):
+		case .HINCRBY(let key, let field, let increment):
 			result = try send_command("HINCRBY \(key) \(field) \(increment)\r\n")
 
-		case HINCRBYFLOAT(let key, let field, let increment):
+		case .HINCRBYFLOAT(let key, let field, let increment):
 			result = try send_command("HINCRBYFLOAT \(key) \(field) \(increment)\r\n")
 
-		case HKEYS(let key):
+		case .HKEYS(let key):
 			result = try send_command("HKEYS \(key)\r\n")
 
-		case HLEN(let key):
+		case .HLEN(let key):
 			result = try send_command("HLEN \(key)\r\n")
 
-		case HMGET(let key, let fields):
+		case .HMGET(let key, let fields):
 			result = try send_command("HMGET \(key) \(fields.joinWithSeparator(" "))\r\n")
 
-		case HMSET(let key, let values):
+		case .HMSET(let key, let values):
 			let strValues = values.reduce(String()) { str, pair in
 				var tmp = ""
 				if str != "" {
@@ -414,10 +420,10 @@ extension Commands {
 
 			result = try send_command("HMSET \(key) \(strValues)\r\n")
 
-		case HSTRLEN(let key, let field):
+		case .HSTRLEN(let key, let field):
 			result = try send_command("HSTRLEN \(key) \(field)\r\n")
 
-		case HVALS(let key):
+		case .HVALS(let key):
 			result = try send_command("HVALS \(key)\r\n")
 
 
