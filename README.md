@@ -1,4 +1,4 @@
-ZRedis
+Redis
 ======
 [![Swift 2.2](https://img.shields.io/badge/Swift-2.2-orange.svg?style=flat)](https://swift.org)
 [![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://tldrlegal.com/license/mit-license)
@@ -17,14 +17,14 @@ brew tap zewo/tap
 brew install libvenice
 ```
 
-Then add `ZRedis` to your `Package.swift`
+Then add `Redis` to your `Package.swift`
 
 ```swift
 import PackageDescription
 
 let package = Package(
     dependencies: [
-        .Package(url: "https://github.com/rabc/ZRedis", majorVersion: 0, minor: 1)
+        .Package(url: "https://github.com/rabc/swift-redis", majorVersion: 0, minor: 2)
     ]
 )
 ```
