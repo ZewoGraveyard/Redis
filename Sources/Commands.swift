@@ -89,10 +89,27 @@ public enum CommandTypeEnum {
 	case SUNIONSTORE(String, Array<String>)
 
 	// Sorted Sets
-	case ZADD(String, Dictionary<String, String>)
+	case ZADD(String, Dictionary<String, String>) // TODO: add the 3.x arguments
 	case ZCARD(String)
 	case ZCOUNT(String, String, String)
 	case ZINCRBY(String, Float, String)
+	case ZINTERSTORE(String, Int, Array<String>, Array<Int>?, String?)
+	case ZUNIONSTORE(String, Int, Array<String>, Array<Int>?, String?)
+	case ZLEXCOUNT(String, String, String)
+	case ZRANGEBYLEX(String, String, String, (Int, Int)?)
+	case ZREVRANGEBYLEX(String, String, String, (Int, Int)?)
+	case ZRANGE(String, Int, Int, Bool)
+	case ZREVRANGE(String, Int, Int, Bool)
+	case ZRANGEBYSCORE(String, String, String, Bool, (Int, Int)?)
+	case ZREVRANGEBYSCORE(String, String, String, Bool, (Int, Int)?)
+	case ZRANK(String, String)
+	case ZREVRANK(String, String)
+	case ZREM(String, Array<String>)
+	case ZREMRANGEBYLEX(String, String, String, (Int, Int)?)
+	case ZREMRANGEBYRANK(String, Int, Int)
+	case ZREMRANGEBYSCORE(String, String, String)
+	case ZSCORE(String, String)
+
 
 	// Hashes
 	case HSET(String, String, String)
@@ -373,6 +390,146 @@ extension Commands {
 
 		case .SUNIONSTORE(let destination, let keys):
 			result = try send_command("SUNIONSTORE \(destination) \(keys.joinWithSeparator(" "))\r\n")
+
+		// Sorted Sets
+		case .ZADD(let key, let values):
+			let strValues = values.reduce(String()) { str, pair in
+				var tmp = ""
+				if str != "" {
+					tmp = "\(str) "
+				}
+				tmp += "\(pair.0) \"\(pair.1)\""
+				return tmp
+			}
+
+			result = try send_command("ZADD \(key) \(strValues)\r\n")
+
+		case .ZCARD(let key):
+			result = try send_command("ZCARD \(key)\r\n")
+
+		case .ZCOUNT(let key, let min, let max):
+			result = try send_command("ZCOUNT \(key) \(min) \(max)\r\n")
+
+		case .ZINCRBY(let key, let increment, let member):
+			result = try send_command("ZINCRBY \(key) \(increment) \"\(member)\"\r\n")
+
+		case .ZINTERSTORE(let destination, let numkeys, let keys, let weights, let aggregate):
+			var cmd = "\(destination) \(numkeys) \(keys.joinWithSeparator(" "))"
+
+			if weights != nil {
+				cmd = "\(cmd) WEIGHTS \(weights)"
+			}
+
+			if aggregate != nil {
+				cmd = "\(cmd) AGGREGATE \(aggregate)"
+			}
+
+			result = try send_command("ZINTERSTORE \(cmd)\r\n")
+
+		case .ZUNIONSTORE(let destination, let numkeys, let keys, let weights, let aggregate):
+			var cmd = "\(destination) \(numkeys) \(keys.joinWithSeparator(" "))"
+
+			if weights != nil {
+				cmd = "\(cmd) WEIGHTS \(weights)"
+			}
+
+			if aggregate != nil {
+				cmd = "\(cmd) AGGREGATE \(aggregate)"
+			}
+
+			result = try send_command("ZUNIONSTORE \(cmd)\r\n")
+
+		case .ZLEXCOUNT(let key, let min, let max):
+			result = try send_command("ZLEXCOUNT \(key) \(min) \(max)\r\n")
+
+		case .ZRANGEBYLEX(let key, let min, let max, let limit):
+			var cmd = "\(key) \(min) \(max)"
+
+			if limit != nil {
+				cmd = "\(cmd) LIMIT \(limit!.0) \(limit!.1)"
+			}
+
+			result = try send_command("ZRANGEBYLEX \(cmd)\r\n")
+
+		case .ZREVRANGEBYLEX(let key, let max, let min, let limit):
+			var cmd = "\(key) \(max) \(min)"
+
+			if limit != nil {
+				cmd = "\(cmd) LIMIT \(limit!.0) \(limit!.1)"
+			}
+
+			result = try send_command("ZRANGEBYLEX \(cmd)\r\n")
+
+		case .ZRANGE(let key, let start, let stop, let withscores):
+			var cmd = "\(key) \(start) \(stop)"
+
+			if withscores {
+				cmd = "\(cmd) WITHSCORES"
+			}
+
+			result = try send_command("ZRANGE \(cmd)\r\n")
+
+		case .ZREVRANGE(let key, let start, let stop, let withscores):
+			var cmd = "\(key) \(start) \(stop)"
+
+			if withscores {
+				cmd = "\(cmd) WITHSCORES"
+			}
+
+			result = try send_command("ZREVRANGE \(cmd)\r\n")
+
+		case .ZRANGEBYSCORE(let key, let min, let max, let withscores, let limit):
+			var cmd = "\(key) \(min) \(max)"
+
+			if withscores {
+				cmd = "\(cmd) WITHSCORES"
+			}
+
+			if limit != nil {
+				cmd = "\(cmd) LIMIT \(limit!.0) \(limit!.1)"
+			}
+
+			result = try send_command("ZRANGEBYSCORE \(cmd)\r\n")
+
+		case .ZREVRANGEBYSCORE(let key, let max, let min, let withscores, let limit):
+			var cmd = "\(key) \(max) \(min)"
+
+			if withscores {
+				cmd = "\(cmd) WITHSCORES"
+			}
+
+			if limit != nil {
+				cmd = "\(cmd) LIMIT \(limit!.0) \(limit!.1)"
+			}
+
+			result = try send_command("ZRANGEBYSCORE \(cmd)\r\n")
+
+		case .ZRANK(let key, let member):
+			result = try send_command("ZRANK \(key) \"\(member)\"\r\n")
+
+		case .ZREVRANK(let key, let member):
+			result = try send_command("ZREVRANK \(key) \"\(member)\"\r\n")
+
+		case .ZREM(let key, let members):
+			result = try send_command("ZREM \(key) \"\(members.joinWithSeparator("\" \""))\"\r\n")
+
+		case .ZREMRANGEBYLEX(let key, let min, let max, let limit):
+			var cmd = "\(key) \(min) \(max)"
+
+			if limit != nil {
+				cmd = "\(cmd) LIMIT \(limit!.0) \(limit!.1)"
+			}
+
+			result = try send_command("ZREMRANGEBYLEX \(cmd)\r\n")
+
+		case .ZREMRANGEBYRANK(let key, let start, let stop):
+			result = try send_command("ZREMRANGEBYRANK \(key) \(start) \(stop)\r\n")
+
+		case .ZREMRANGEBYSCORE(let key, let min, let max):
+			result = try send_command("ZREMRANGEBYSCORE \(key) \(min) \(max)\r\n")
+
+		case .ZSCORE(let key, let member):
+			result = try send_command("ZSCORE \(key) \"\(member)\"\r\n")
 
 		// Hashes
 		case .HSET(let key, let field, let value):
