@@ -2,20 +2,11 @@ Redis
 ======
 [![Swift 3.0](https://img.shields.io/badge/Swift-3.0-orange.svg?style=flat)](https://swift.org)
 [![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://tldrlegal.com/license/mit-license)
+[![Slack Status](https://zewo-slackin.herokuapp.com/badge.svg)](https://zewo-slackin.herokuapp.com)
 
 A pure Swift client for Redis.
 
-- [x] TCP
-- [ ] hiredis
-
-## Installing
-
-First install [libvenice](https://github.com/Zewo/libvenice):
-
-```bash
-brew tap zewo/tap
-brew install libvenice
-```
+## Installation
 
 Then add `Redis` to your `Package.swift`
 
@@ -24,7 +15,7 @@ import PackageDescription
 
 let package = Package(
     dependencies: [
-        .Package(url: "https://github.com/rabc/swift-redis", majorVersion: 0, minor: 2)
+        .Package(url: "https://github.com/Zewo/Redis", majorVersion: 0, minor: 3)
     ]
 )
 ```
@@ -35,6 +26,7 @@ let package = Package(
 let redis = try Redis("127.0.0.1", 6379)
 try redis.command(.SET("foo", "bar"))
 ```
+
 All commands and its parameters are defined in `CommandTypeEnum` enum, with parameters in the same order as Redis docs. The `command` function returns the same response from Redis.
 
 Commands with milliseconds (`SETEX/PSETEX`, `EXPIRE/PEXPIRE`, etc) has a `Bool` parameter to send or return in milliseconds. 
@@ -91,16 +83,21 @@ Pull requests are welcome, there is a lot to do (not in a specific order):
 - [x] Pub/Sub
 - [ ] Scripts
 - [ ] Pipeline with `DISCARD`
-- [ ] Wrap hiredis
 - [ ] Check the `TODO` around the code
 - [ ] Implement all commands
 
-Now, all commands are being sent through `TCP`. The plan is use `hiredis` as default but choose `TCP` when it's not available.
+We recommend using the [Vagrant from redis-py](https://github.com/andymccurdy/redis-py/tree/master/vagrant) to test everything.
 
-## Author
+## Community
 
-Ricardo Borelli - [@rabc](http://twitter.com/rabc)
+[![Slack](http://s13.postimg.org/ybwy92ktf/Slack.png)](https://zewo-slackin.herokuapp.com)
 
+Join us on [Slack](https://zewo-slackin.herokuapp.com).
+
+License
+-------
+
+**Redis** is released under the MIT license. See LICENSE for details.
 
 
 
