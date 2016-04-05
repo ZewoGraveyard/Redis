@@ -1,9 +1,5 @@
 import TCP
 
-public enum CommandError: ErrorType {
-	
-}
-
 extension Array {
 	public func quoteItems() -> Array<String> {
 		let result: [String] = self.flatMap({ String("\"\($0)\"") })
@@ -168,11 +164,11 @@ extension Commands {
 			result = try send_command("BITCOUNT \(key) \(start) \(end)\r\n")
 
 		case .BITOP(let operation, let destkey, let srckeys):
-			result = try send_command("BITOP \(operation) \(destkey) \(srckeys.joinWithSeparator(" "))\r\n")
+			result = try send_command("BITOP \(operation) \(destkey) \(srckeys.joined(separator: " "))\r\n")
 
 		case .BITPOS(let key, let bit, let start_end):
 			let stringArray = start_end.quoteItems()
-			result = try send_command("BITPOS \(key) \(bit) \(stringArray.joinWithSeparator(" "))\r\n")
+			result = try send_command("BITPOS \(key) \(bit) \(stringArray.joined(separator: " "))\r\n")
 
 		case .INCR(let key):
 			result = try send_command("INCR \(key)\r\n")
@@ -205,7 +201,7 @@ extension Commands {
 			result = try send_command("INCRBYFLOAT \(key) \(increment)\r\n")
 
 		case .MGET(let keys):
-			result = try send_command("MGET \(keys.joinWithSeparator(" "))\r\n")
+			result = try send_command("MGET \(keys.joined(separator: " "))\r\n")
 
 		case .MSET(let items):
 			var cmdStr = ""
@@ -239,13 +235,13 @@ extension Commands {
 
 		// Keys
 		case .DEL(let keys):
-			result = try send_command("DEL \(keys.joinWithSeparator(" "))\r\n")
+			result = try send_command("DEL \(keys.joined(separator: " "))\r\n")
 
 		case .DUMP(let key):
 			result = try send_command("DUMP \(key)\r\n")
 
 		case .EXISTS(let keys):
-			result = try send_command("EXISTS \(keys.joinWithSeparator(" "))\r\n")
+			result = try send_command("EXISTS \(keys.joined(separator: " "))\r\n")
 
 		case .EXPIRE(let key, let seconds, let p):
 			result = try send_command(p ? "P" : "" + "EXPIRE \(key) \(seconds)\r\n")
@@ -294,10 +290,10 @@ extension Commands {
 			result = try send_command("SELECT \(index)\r\n")
 
 		case .BLPOP(let keys, let timeout):
-			result = try send_command("BLPOP \(keys.joinWithSeparator(" ")) \(timeout))\r\n")
+			result = try send_command("BLPOP \(keys.joined(separator: " ")) \(timeout))\r\n")
 
 		case .BRPOP(let keys, let timeout):
-			result = try send_command("\(keys.joinWithSeparator(" ")) \(timeout)\r\n")
+			result = try send_command("\(keys.joined(separator: " ")) \(timeout)\r\n")
 
 		case .BRPOPLPUSH(let source, let destination, let timeout):
 			result = try send_command("BRPOPLPUSH \(source) \"\(destination)\" \(timeout)\r\n")
@@ -316,7 +312,7 @@ extension Commands {
 
 		case .LPUSH(let key, let values):
 			let newValues = values.quoteItems()
-			result = try send_command("LPUSH \(key) \(newValues.joinWithSeparator(" "))\r\n")
+			result = try send_command("LPUSH \(key) \(newValues.joined(separator: " "))\r\n")
 
 		case .LPUSHX(let key, let value):
 			result = try send_command("LPUSHX \(key) \"\(value)\"\r\n")
@@ -341,7 +337,7 @@ extension Commands {
 
 		case .RPUSH(let key, let values):
 			let newValues = values.quoteItems()
-			result = try send_command("RPUSH \(key) \(newValues.joinWithSeparator(" "))\r\n")
+			result = try send_command("RPUSH \(key) \(newValues.joined(separator: " "))\r\n")
 
 		case .RPUSHX(let key, let value):
 			result = try send_command("RPUSHX \(key) \"\(value)\"\r\n")
@@ -349,22 +345,22 @@ extension Commands {
 		// Sets commands
 		case .SADD(let key, let members):
 			let newValues = members.quoteItems()
-			result = try send_command("SADD \(key) \(newValues.joinWithSeparator(" "))\r\n")
+			result = try send_command("SADD \(key) \(newValues.joined(separator: " "))\r\n")
 
 		case .SCARD(let key):
 			result = try send_command("SCARD \(key)\r\n")
 
 		case .SDIFF(let keys):
-			result = try send_command("SDIFF \(keys.joinWithSeparator(" "))\r\n")
+			result = try send_command("SDIFF \(keys.joined(separator: " "))\r\n")
 
 		case .SDIFFSTORE(let destination, let keys):
-			result = try send_command("SDIFFSTORE \(destination) \(keys.joinWithSeparator(" "))\r\n")
+			result = try send_command("SDIFFSTORE \(destination) \(keys.joined(separator: " "))\r\n")
 
 		case .SINTER(let keys):
-			result = try send_command("SINTER \(keys.joinWithSeparator(" "))\r\n")
+			result = try send_command("SINTER \(keys.joined(separator: " "))\r\n")
 
 		case .SINTERSTORE(let destination, let keys):
-			result = try send_command("SINTERSTORE \(destination) \(keys.joinWithSeparator(" "))\r\n")
+			result = try send_command("SINTERSTORE \(destination) \(keys.joined(separator: " "))\r\n")
 
 		case .SISMEMBER(let key, let member):
 			result = try send_command("SISMEMBER \(key) \"\(member)\"\r\n")
@@ -383,13 +379,13 @@ extension Commands {
 
 		case .SREM(let key, let members):
 			let newMembers = members.quoteItems()
-			result = try send_command("SREM \(key) \(newMembers.joinWithSeparator(" "))\r\n")
+			result = try send_command("SREM \(key) \(newMembers.joined(separator: " "))\r\n")
 
 		case .SUNION(let keys):
-			result = try send_command("SUNION \(keys.joinWithSeparator(" "))\r\n")
+			result = try send_command("SUNION \(keys.joined(separator: " "))\r\n")
 
 		case .SUNIONSTORE(let destination, let keys):
-			result = try send_command("SUNIONSTORE \(destination) \(keys.joinWithSeparator(" "))\r\n")
+			result = try send_command("SUNIONSTORE \(destination) \(keys.joined(separator: " "))\r\n")
 
 		// Sorted Sets
 		case .ZADD(let key, let values):
@@ -414,7 +410,7 @@ extension Commands {
 			result = try send_command("ZINCRBY \(key) \(increment) \"\(member)\"\r\n")
 
 		case .ZINTERSTORE(let destination, let numkeys, let keys, let weights, let aggregate):
-			var cmd = "\(destination) \(numkeys) \(keys.joinWithSeparator(" "))"
+			var cmd = "\(destination) \(numkeys) \(keys.joined(separator: " "))"
 
 			if weights != nil {
 				cmd = "\(cmd) WEIGHTS \(weights)"
@@ -427,7 +423,7 @@ extension Commands {
 			result = try send_command("ZINTERSTORE \(cmd)\r\n")
 
 		case .ZUNIONSTORE(let destination, let numkeys, let keys, let weights, let aggregate):
-			var cmd = "\(destination) \(numkeys) \(keys.joinWithSeparator(" "))"
+			var cmd = "\(destination) \(numkeys) \(keys.joined(separator: " "))"
 
 			if weights != nil {
 				cmd = "\(cmd) WEIGHTS \(weights)"
@@ -511,7 +507,7 @@ extension Commands {
 			result = try send_command("ZREVRANK \(key) \"\(member)\"\r\n")
 
 		case .ZREM(let key, let members):
-			result = try send_command("ZREM \(key) \"\(members.joinWithSeparator("\" \""))\"\r\n")
+			result = try send_command("ZREM \(key) \"\(members.joined(separator: "\" \""))\"\r\n")
 
 		case .ZREMRANGEBYLEX(let key, let min, let max, let limit):
 			var cmd = "\(key) \(min) \(max)"
@@ -539,7 +535,7 @@ extension Commands {
 			result = try send_command("HSETNX \(key) \(field) \"\(value)\"\r\n")
 
 		case .HDEL(let key, let fields):
-			result = try send_command("HDEL \(key) \(fields.joinWithSeparator(" "))\r\n")
+			result = try send_command("HDEL \(key) \(fields.joined(separator: " "))\r\n")
 
 		case .HEXISTS(let key, let field):
 			result = try send_command("HEXISTS \(key) \(field)\r\n")
@@ -563,7 +559,7 @@ extension Commands {
 			result = try send_command("HLEN \(key)\r\n")
 
 		case .HMGET(let key, let fields):
-			result = try send_command("HMGET \(key) \(fields.joinWithSeparator(" "))\r\n")
+			result = try send_command("HMGET \(key) \(fields.joined(separator: " "))\r\n")
 
 		case .HMSET(let key, let values):
 			let strValues = values.reduce(String()) { str, pair in
@@ -597,7 +593,7 @@ extension Commands {
 	public func pipeline(watch: [String] = [], pipe: () throws -> Void) throws -> Any? {
 
 		if watch.count > 0 {
-			try send_command("WATCH \(watch.joinWithSeparator(" "))\r\n")
+			try send_command("WATCH \(watch.joined(separator: " "))\r\n")
 		}
 
 		try send_command("MULTI\r\n")

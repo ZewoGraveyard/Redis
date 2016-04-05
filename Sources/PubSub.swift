@@ -12,7 +12,7 @@ public class PubSub {
 	}
 
 	public func subscribe(channels: [String], callback: (message: [String: Any?]) -> Void) throws {
-		let initial: [Any?] = try self.connection.command(.RAW("SUBSCRIBE \(channels.joinWithSeparator(" "))")) as! Array
+		let initial: [Any?] = try self.connection.command(.RAW("SUBSCRIBE \(channels.joined(separator: " "))")) as! Array
 		
 		for i in 0..<initial.count {
 			// multiple channels means multiple callbacks
