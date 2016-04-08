@@ -3,6 +3,7 @@ Redis
 [![Swift 3.0](https://img.shields.io/badge/Swift-3.0-orange.svg?style=flat)](https://swift.org)
 [![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://tldrlegal.com/license/mit-license)
 [![Slack Status](https://zewo-slackin.herokuapp.com/badge.svg)](https://zewo-slackin.herokuapp.com)
+[![Build Status](https://travis-ci.org/Zewo/Redis.svg?branch=master)](https://travis-ci.org/Zewo/Redis)
 
 A pure Swift client for Redis.
 
