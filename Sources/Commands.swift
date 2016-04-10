@@ -135,14 +135,15 @@ public enum CommandTypeEnum {
 }
 
 public protocol Commands {
-	var conn: TCPClientSocket { get }
+	var conn: TCPConnection { get }
 }
 
 extension Commands {
 
 	private func send_command(command: String) throws -> Any? {
 		try conn.send(command)
-		let response = try String(data: try conn.receive(lowWaterMark: 1, highWaterMark: 65536))
+        
+		let response = try String(data: try conn.receive(upTo: 65536))
 
 		return try Parser.read_response(response)
 	}
