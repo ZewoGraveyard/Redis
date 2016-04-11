@@ -70,7 +70,7 @@ try redis.pipeline(["foo"]) {
 
 __WARNING:__ This is a first draft and the syntax is open to discussion. Beware of changes.
 
-PubSub can subscribe to multiple channels at once, but you've to unsubscribe of one at time.
+PubSub can subscribe to multiple channels at once, but you have to unsubscribe one at time.
 
 ```swift
 let redis = try Redis("127.0.0.1", 6379)
