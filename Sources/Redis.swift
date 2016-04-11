@@ -1,4 +1,4 @@
-//import TCP
+import TCP
 
 public final class Redis: Commands {
 
