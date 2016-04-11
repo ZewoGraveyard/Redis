@@ -10,10 +10,9 @@ A pure Swift client for Redis.
 ## Features
 
 - [x] Pub/Sub
-- [ ] Scripts
 - [x] Pipeline with `DISCARD`
-- [ ] Check the `TODO` around the code
-- [ ] Implement all commands
+- [ ] Scripts
+- [ ] All commands
 
 
 ## Installation
