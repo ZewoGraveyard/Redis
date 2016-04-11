@@ -7,6 +7,15 @@ Redis
 
 A pure Swift client for Redis.
 
+## Features
+
+- [x] Pub/Sub
+- [ ] Scripts
+- [x] Pipeline with `DISCARD`
+- [ ] Check the `TODO` around the code
+- [ ] Implement all commands
+
+
 ## Installation
 
 Then add `Redis` to your `Package.swift`
@@ -80,12 +89,7 @@ try pubsub.subscribe(["foo-channel", "bar-channel"]) { message in
 
 ## Contributing
 
-Pull requests are welcome, there is a lot to do (not in a specific order):
-- [x] Pub/Sub
-- [ ] Scripts
-- [x] Pipeline with `DISCARD`
-- [ ] Check the `TODO` around the code
-- [ ] Implement all commands
+Pull requests are welcome, there is a lot to do.
 
 We recommend using the [Vagrant from redis-py](https://github.com/andymccurdy/redis-py/tree/master/vagrant) to test everything.
 
