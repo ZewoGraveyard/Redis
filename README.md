@@ -83,7 +83,7 @@ try pubsub.subscribe(["foo-channel", "bar-channel"]) { message in
 Pull requests are welcome, there is a lot to do (not in a specific order):
 - [x] Pub/Sub
 - [ ] Scripts
-- [ ] Pipeline with `DISCARD`
+- [x] Pipeline with `DISCARD`
 - [ ] Check the `TODO` around the code
 - [ ] Implement all commands
 
