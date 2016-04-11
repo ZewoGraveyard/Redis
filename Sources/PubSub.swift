@@ -25,7 +25,7 @@ public class PubSub {
 		self.run = true
 		while self.run {
 			do {
-				let response = try String(data: try self.connection.conn.receive(lowWaterMark: 1, highWaterMark: 65536))
+				let response = try String(data: try self.connection.conn.receive(upTo: 65536))
 				let parsed: [Any?] = try Parser.read_response(response) as! Array
 				callback(message: ["type": parsed[0], 
 									"channel": parsed[1],

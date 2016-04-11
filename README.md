@@ -7,6 +7,14 @@ Redis
 
 A pure Swift client for Redis.
 
+## Features
+
+- [x] Pub/Sub
+- [x] Pipeline with `DISCARD`
+- [ ] Scripts
+- [ ] All commands
+
+
 ## Installation
 
 Then add `Redis` to your `Package.swift`
@@ -30,7 +38,7 @@ try redis.command(.SET("foo", "bar"))
 
 All commands and its parameters are defined in `CommandTypeEnum` enum, with parameters in the same order as Redis docs. The `command` function returns the same response from Redis.
 
-Commands with milliseconds (`SETEX/PSETEX`, `EXPIRE/PEXPIRE`, etc) has a `Bool` parameter to send or return in milliseconds. 
+Commands with milliseconds (`SETEX/PSETEX`, `EXPIRE/PEXPIRE`, etc) have a `Bool` parameter to send or return in milliseconds. 
 It's always the last parameter.
 
 At this time, there is some commands exceptions:
@@ -62,7 +70,7 @@ try redis.pipeline(["foo"]) {
 
 __WARNING:__ This is a first draft and the syntax is open to discussion. Beware of changes.
 
-PubSub can subscribe to multiple channels at once, but you've to unsubscribe of one at time.
+PubSub can subscribe to multiple channels at once, but you have to unsubscribe one at time.
 
 ```swift
 let redis = try Redis("127.0.0.1", 6379)
@@ -80,12 +88,7 @@ try pubsub.subscribe(["foo-channel", "bar-channel"]) { message in
 
 ## Contributing
 
-Pull requests are welcome, there is a lot to do (not in a specific order):
-- [x] Pub/Sub
-- [ ] Scripts
-- [ ] Pipeline with `DISCARD`
-- [ ] Check the `TODO` around the code
-- [ ] Implement all commands
+Pull requests are welcome, there is a lot to do.
 
 We recommend using the [Vagrant from redis-py](https://github.com/andymccurdy/redis-py/tree/master/vagrant) to test everything.
 
