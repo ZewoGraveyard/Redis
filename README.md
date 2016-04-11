@@ -17,7 +17,7 @@ A pure Swift client for Redis.
 
 ## Installation
 
-Then add `Redis` to your `Package.swift`
+Add `Redis` to your `Package.swift`
 
 ```swift
 import PackageDescription
@@ -102,9 +102,3 @@ License
 -------
 
 **Redis** is released under the MIT license. See LICENSE for details.
-
-
-
-
-
-
