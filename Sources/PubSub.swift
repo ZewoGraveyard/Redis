@@ -12,7 +12,7 @@ public class PubSub {
 	}
 
 	public func subscribe(channels: [String], callback: (message: [String: Any?]) -> Void) throws {
-		let initial: [Any?] = try self.connection.command(.RAW("SUBSCRIBE \(channels.joined(separator: " "))")) as! Array
+    let initial: [Any?] = try self.connection.command(type: .RAW("SUBSCRIBE \(channels.joined(separator: " "))")) as! Array
 		
 		for i in 0..<initial.count {
 			// multiple channels means multiple callbacks
@@ -26,7 +26,7 @@ public class PubSub {
 		while self.run {
 			do {
 				let response = try String(data: try self.connection.conn.receive(upTo: 65536))
-				let parsed: [Any?] = try Parser.read_response(response) as! Array
+        let parsed: [Any?] = try Parser.read_response(fullResponse: response) as! Array
 				callback(message: ["type": parsed[0], 
 									"channel": parsed[1],
 									"data": parsed[2]])
@@ -39,7 +39,7 @@ public class PubSub {
 	public func unsubscribe(channel: String) -> [String: Any?]? {
 
 		do {
-			let unsub: [Any?] = try self.connection.command(.RAW("UNSUBSCRIBE \(channel)")) as! Array
+      let unsub: [Any?] = try self.connection.command(type: .RAW("UNSUBSCRIBE \(channel)")) as! Array
 
 			if unsub[2] as? Int == 0 {
 				self.run = false

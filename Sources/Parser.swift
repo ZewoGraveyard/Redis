@@ -33,14 +33,14 @@ struct Parser {
 			throw ResponseError.ServerError(error: response)
 		case ":":
 			// Simple integer
-			let idx = Int(response.indexOfCharacter("\r\n")!)
+      let idx = Int(response.indexOfCharacter(char: "\r\n")!)
 			result = Int(response[response.startIndex..<response.startIndex.advanced(by: idx)])
 		case "+":
 			// Simple scleng
 			result = String(response)
 		case "$":
 			// Bulk string
-			let idx = Int(response.indexOfCharacter("\r\n")!)
+      let idx = Int(response.indexOfCharacter(char: "\r\n")!)
 			if response[response.startIndex..<response.startIndex.advanced(by: idx)] == "-1" {
 				// nil string
 				result = nil
@@ -67,7 +67,7 @@ struct Parser {
 					while tmp.count < tail {
 
 						if values[0][values[0].startIndex] != "$" {
-							tmp.append(try Parser.read_response("\(values[0])\r\n"))
+              tmp.append(try Parser.read_response(fullResponse: "\(values[0])\r\n"))
 						} else {
 							values.remove(at: 0)
 							tmp.append(values[0])
