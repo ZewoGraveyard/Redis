@@ -145,7 +145,7 @@ extension Commands {
         
 		let response = try String(data: try conn.receive(upTo: 65536))
 
-    return try Parser.read_response(fullResponse: response)
+		return try Parser.readResponse(response)
 	}
 
 	public func command(type: CommandTypeEnum) throws -> Any? {
