@@ -140,12 +140,12 @@ public protocol Commands {
 
 extension Commands {
 
-	private func send(command command: String) throws -> Any? {
+	private func send(command: String) throws -> Any? {
 		try conn.send(command)
         
 		let response = try String(data: try conn.receive(upTo: 65536))
 
-		return try Parser.read_response(response)
+    return try Parser.read_response(fullResponse: response)
 	}
 
 	public func command(type: CommandTypeEnum) throws -> Any? {
