@@ -6,5 +6,6 @@ public final class Redis: Commands {
 
 	public init(_ host: String, _ port: Int) throws {
         conn = try TCPConnection(host: host, port: port)
+        try conn.open()
 	}
 }
