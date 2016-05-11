@@ -1,3 +1,4 @@
+import String
 
 extension String {
 
@@ -36,7 +37,7 @@ struct Parser {
 			let idx = Int(response.indexOf(character: "\r\n")!)
 			result = Int(response[response.startIndex..<response.startIndex.advanced(by: idx)])
 		case "+":
-			// Simple scleng
+			// Simple string
 			result = String(response)
 		case "$":
 			// Bulk string
